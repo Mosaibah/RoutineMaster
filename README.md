@@ -34,3 +34,7 @@ With RoutineMaster, users can easily plan and manage their daily routines and ta
 6. As a user, I want to start a countdown timer for a task so that I can focus on completing it within the allocated time.
 7. As a user, I want to pause, resume, and stop the countdown timer so that I can adjust my schedule as needed.
 8. As a user, I want to see the remaining time on the countdown timer so that I can manage my time effectively.
+
+## Wireframe
+![5ea46406360646c988e8bab862b8324e (2)](https://user-images.githubusercontent.com/76538765/230911536-71521f35-583a-4ff5-9c1b-d1fc3278bc55.png)
+

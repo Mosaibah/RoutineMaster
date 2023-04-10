@@ -5,7 +5,7 @@ RoutineMaster also features a countdown timer for each task, which ensures that 
 
 With RoutineMaster, users can easily plan and manage their daily routines and tasks, ensuring that they stay on track and achieve their goals. The application serves as a personal assistant, helping users master their routines and tasks, and enabling them to focus on what is important.
 
-## Functional Requirements
+### Functional Requirements
 
 1. Users should be able to create a new account.
 2. Users should be able to log in to their account.
@@ -17,7 +17,7 @@ With RoutineMaster, users can easily plan and manage their daily routines and ta
 8. Users should be able to pause, resume, and stop the countdown timer.
 9. The countdown timer should display the remaining time as it counts down.
 
-## Non-Functional Requirements
+### Non-Functional Requirements
 
 1. The application should be user-friendly, with an intuitive interface for creating and managing daily task templates.
 2. The application should be responsive and work on multiple devices, including smartphones, tablets, and desktop computers.
@@ -25,7 +25,7 @@ With RoutineMaster, users can easily plan and manage their daily routines and ta
 4. The countdown timer should be accurate and reliable, with minimal lag or delay.
 5. The application should be secure, with proper authentication and encryption measures in place to protect user data.
 
-## User Stories
+### User Stories
 1. As a user, I want to create a new account so that I can use the application.
 2. As a user, I want to log in to my account so that I can access my daily task templates.
 3. As a user, I want to create a daily task template so that I can plan my day efficiently.
@@ -35,6 +35,6 @@ With RoutineMaster, users can easily plan and manage their daily routines and ta
 7. As a user, I want to pause, resume, and stop the countdown timer so that I can adjust my schedule as needed.
 8. As a user, I want to see the remaining time on the countdown timer so that I can manage my time effectively.
 
-## Wireframe
+### Wireframe
 ![5ea46406360646c988e8bab862b8324e (2)](https://user-images.githubusercontent.com/76538765/230911536-71521f35-583a-4ff5-9c1b-d1fc3278bc55.png)
 

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-export default function Header({ signOut }) {
+export default function Navbar({ signOut }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {

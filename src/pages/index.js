@@ -22,14 +22,11 @@ const templates = [
     tasks: [
       { name: "Task 1", duration: 25 },
       { name: "Task 2", duration: 40 },
-      { name: "Task 3", duration: 55 },
-      { name: "Task 4", duration: 85 },
     ],
   },
   {
     title: "Template 3",
     tasks: [
-      { name: "Task 1", duration: 20 },
       { name: "Task 2", duration: 35 },
       { name: "Task 3", duration: 50 },
       { name: "Task 4", duration: 80 },
@@ -49,16 +46,16 @@ export default function Home() {
     <Navbar/>
     <div className="flex-1">
       <div>
-        
-      <div className="container mx-auto px-4 py-8">
+        <div className=' px-2 py-4 bg-gray-300 font-white mt-4 mx-4 rounded-md text-center text-lg font-semibold'>
+          Choose template for today
+        </div>
+      <div className="mx-6 px-4 py-8">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {templates.map((template, index) => (
             <Card key={index} title={template.title} tasks={template.tasks} onSelect={handleSelect} />
           ))}
         </div>
       </div>
-        
-
       </div>
     </div>
     <Footer/>

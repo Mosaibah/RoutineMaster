@@ -46,7 +46,7 @@ export default function Navbar({ signOut }) {
               {/* Logout Button */}
               <div className="hidden md:block">
                 <button
-                  className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mr-2"
+                  className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 border border-gray-400 rounded shadow mr-2"
                   onClick={signOut}
                 >
                   Logout
@@ -117,6 +117,12 @@ export default function Navbar({ signOut }) {
                 >
                   Templates
                 </Link>
+                <button
+                  className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-0 ms-2 px-2 border border-gray-400 rounded shadow mr-2"
+                  onClick={signOut}
+                >
+                  Logout
+                </button>
               </div>
             </div>
           )}

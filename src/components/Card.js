@@ -11,7 +11,7 @@ const Card = ({ title, tasks, onSelect , typeOfButton, color}) => {
       <div className="bg-white shadow-xl rounded p-6 w-full border-2 border-gray-400">
         <div className="flex justify-between items-center mb-4">
         <span className="text-md font-bold ">{title}</span>
-          <span>Tasks: {totalTasks}</span>
+          <span>{totalTasks} tasks</span>
           <span>{totalTime} min</span>
         </div>
         <div className="grid grid-cols-1 gap-2 mb-4">

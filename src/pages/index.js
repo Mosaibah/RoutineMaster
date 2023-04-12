@@ -1,3 +1,5 @@
+'use client'
+import React from 'react'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import Navbar from '../components/Navbar';
@@ -42,13 +44,9 @@ export default function Home() {
 
   return (
   <>
-    <div className="flex flex-col min-h-screen">
-    <Navbar/>
-    <div className="flex-1">
-      <div>
-        <div className=' px-2 py-4 bg-gray-300 font-white mt-4 mx-4 rounded-md text-center text-lg font-semibold'>
-          Choose template for today
-        </div>
+      <div className=' px-2 py-4 bg-gray-300 font-white mt-4 mx-4 rounded-md text-center text-lg font-semibold'>
+        Choose template for today
+      </div>
       <div className="mx-6 px-4 py-8">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {templates.map((template, index) => (
@@ -59,10 +57,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-      </div>
-    </div>
-    <Footer/>
-    </div>
   </>
   )
 }

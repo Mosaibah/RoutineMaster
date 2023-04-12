@@ -1,4 +1,4 @@
-import react from "react"
+import React from "react"
 
 const Button = ({ name, onClick, color }) => {
     return (

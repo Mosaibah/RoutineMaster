@@ -1,3 +1,5 @@
+'use client'
+import React from 'react'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import Navbar from '../../components/Navbar';
@@ -43,18 +45,14 @@ export default function Templates() {
 
   return (
   <>
-    <div className="flex flex-col min-h-screen">
-    <Navbar/>
-    <div className="flex-1">
-      <div>
-      <div className="mx-6 px-4 py-8">
-      <div class="flex justify-end items-center">
+    <div className="mx-6 px-4 py-8">
+      <div className="flex justify-end items-center">
         <Link 
         href="/templates/create"
-        class="bg-lime-500 text-white font-bold py-2 px-4 my-2 rounded-lg hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-600 focus:ring-opacity-50 sm:text-sm md:text-base lg:text-lg xl:text-xl">
+        className="bg-lime-500 text-white font-bold py-2 px-4 my-2 rounded-lg hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-600 focus:ring-opacity-50 sm:text-sm md:text-base lg:text-lg xl:text-xl">
             New
         </Link>
-    </div>
+      </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {templates.map((template, index) => (
             <Card key={index} title={template.title} 
@@ -64,10 +62,6 @@ export default function Templates() {
           ))}
         </div>
       </div>
-      </div>
-    </div>
-    <Footer/>
-    </div>
   </>
   )
 }

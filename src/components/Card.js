@@ -1,4 +1,5 @@
-import React from 'react';
+'use client'
+import React from 'react'
 import TaskCard from '../components/TaskCard'
 import Button from '../components/Button'
 

@@ -1,8 +1,9 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import Card from '../components/Card';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
+import Card from '../../components/Card';
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -34,7 +35,7 @@ const templates = [
   },
 ];
 
-export default function Home() {
+export default function Templates() {
 
   const handleSelect = () => {
     console.log('Card selected');
@@ -46,16 +47,20 @@ export default function Home() {
     <Navbar/>
     <div className="flex-1">
       <div>
-        <div className=' px-2 py-4 bg-gray-300 font-white mt-4 mx-4 rounded-md text-center text-lg font-semibold'>
-          Choose template for today
-        </div>
       <div className="mx-6 px-4 py-8">
+      <div class="flex justify-end items-center">
+        <Link 
+        href="/templates/create"
+        class="bg-lime-500 text-white font-bold py-2 px-4 my-2 rounded-lg hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-600 focus:ring-opacity-50 sm:text-sm md:text-base lg:text-lg xl:text-xl">
+            New
+        </Link>
+    </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {templates.map((template, index) => (
             <Card key={index} title={template.title} 
                   tasks={template.tasks} onSelect={handleSelect} 
-                  typeOfButton="Select"
-                  color="green"/>
+                  typeOfButton="Update"
+                  color="amber"/>
           ))}
         </div>
       </div>

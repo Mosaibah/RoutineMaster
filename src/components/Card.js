@@ -1,7 +1,8 @@
 import React from 'react';
 import TaskCard from '../components/TaskCard'
+import Button from '../components/Button'
 
-const Card = ({ title, tasks, onSelect }) => {
+const Card = ({ title, tasks, onSelect , typeOfButton, color}) => {
     const totalTasks = tasks.length;
     const totalTime = tasks.reduce((acc, task) => acc + task.duration, 0);
   
@@ -18,12 +19,7 @@ const Card = ({ title, tasks, onSelect }) => {
           ))}
         </div>
         <div className='flex flex-col justify-center'>
-            <button
-            className=" text-green-600 py-2 px-4 rounded-md font-medium border-2 border-green-600"
-            onClick={onSelect}
-            >
-            Select
-            </button>
+            <Button name={typeOfButton} onSelect={onSelect} color={color}/>
         </div>
       </div>
     );

@@ -31,13 +31,11 @@ export default function CreateTemplate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const UserId = await GetUserData()
-    const TasksSend = Object.values(tasks)
-    const Tasks = TasksSend.map((task) => [
+    const TasksObj = Object.values(tasks)
+    const Tasks = TasksObj.map((task) => [
       task.taskName,
       task.duration,
     ]);
-    console.log(Tasks)
-    console.log(JSON.stringify({ Title, UserId , Tasks }))
     try {
       const response = await fetch('https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/templates', {
         method: 'POST',
@@ -46,7 +44,6 @@ export default function CreateTemplate() {
         },
         body: JSON.stringify({ Title, UserId , Tasks })
       });
-      // console.log({Tasks}.Tasks)
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

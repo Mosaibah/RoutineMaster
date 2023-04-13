@@ -1,4 +1,20 @@
 {
+  "api": {
+    "Template": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "Template"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
   "auth": {
     "RoutineMaster": {
       "customAuth": false,
@@ -28,6 +44,56 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "function": {
+    "Template": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_Template_database": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Template"
+        }
+      ]
+    },
+    "AMPLIFY_function_Template_host": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Template"
+        }
+      ]
+    },
+    "AMPLIFY_function_Template_password": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Template"
+        }
+      ]
+    },
+    "AMPLIFY_function_Template_port": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Template"
+        }
+      ]
+    },
+    "AMPLIFY_function_Template_user": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Template"
+        }
+      ]
     }
   }
 }

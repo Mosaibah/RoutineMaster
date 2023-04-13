@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/templates": {
+      "name": "/templates",
+      "lambdaFunction": "Template",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

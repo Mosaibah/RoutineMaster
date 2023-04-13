@@ -14,6 +14,15 @@
     "categories": {
       "auth": {
         "RoutineMaster": {}
+      },
+      "function": {
+        "Template": {
+          "host": "178.62.200.233",
+          "user": "doadmin",
+          "password": "m0sAibah.s",
+          "database": "RoutineMaster",
+          "port": "5432"
+        }
       }
     }
   }

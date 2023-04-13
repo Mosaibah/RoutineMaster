@@ -54,26 +54,25 @@ app.use(express.json());
 
 
 /**********************
- * Example get method *
+ * get method *
  **********************/
-
 app.get('/templates', async (req, res) => {
-  const userId = req.user.sub; // Get the user's sub attribute from Cognito
-
+  const userId = req.query.userId; // Get the user's sub attribute from Cognito
+  console.log(userId);
   const client = await pool.connect();
 
   try {
     // Query the templates table
     const templatesResult = await client.query(
-      'SELECT Id, Name FROM Templates WHERE UserId = $1',
+      'SELECT "Id", "Name" FROM public."Templates" WHERE "UserId" = $1 order by "Id" desc',
       [userId]
     );
     const templates = templatesResult.rows;
 
     // Query the tasks table for each template
     const tasksPromises = templates.map((template) =>
-      client.query('SELECT Id, Duration FROM Tasks WHERE TemplateId = $1', [
-        template.id,
+      client.query('SELECT "Id", "Name", "Duration" FROM public."Tasks" WHERE "TemplateId" = $1', [
+        template.Id,
       ])
     );
 
@@ -83,10 +82,13 @@ app.get('/templates', async (req, res) => {
     const combinedResults = templates.map((template, index) => {
       const tasks = tasksResults[index].rows;
       return {
-        templateName: template.name,
-        tasks: tasks.map((task) => [task.id, task.duration]),
+        title: template.Name,
+        tasks: tasks.map((task) => ({ name: task.Name, duration: task.Duration })),
       };
     });
+
+    // Log the combinedResults instead of templates
+    console.log(combinedResults);
 
     res.json(combinedResults);
   } catch (error) {
@@ -105,10 +107,6 @@ app.post('/templates', async (req, res) => {
   // console.log(req)
   // const userId = req.user.sub; // Get the user's sub attribute from Cognito
   const { Title, UserId, Tasks } = req.body;
-  console.log(req);
-  console.log(Title);
-  console.log(UserId);
-  console.log(Tasks);
 
   const client = await pool.connect();
 
@@ -122,8 +120,7 @@ app.post('/templates', async (req, res) => {
     );
 
     const templateId = templateResult.rows[0].Id;
-    console.log(templateId)
-    console.log(Tasks)
+  
     // Insert the tasks into the tasks table
     const tasksPromises = Tasks.map(([taskName, duration]) =>
       client.query(

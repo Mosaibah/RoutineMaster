@@ -23,7 +23,7 @@
           "database": "RoutineMaster",
           "port": "5432",
           "deploymentBucketName": "amplify-amplifyf721980bed764-staging-155551-deployment",
-          "s3Key": "amplify-builds/Template-4b722b30454141444448-build.zip"
+          "s3Key": "amplify-builds/Template-4149614764416c534a74-build.zip"
         }
       },
       "api": {

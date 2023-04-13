@@ -1,11 +1,11 @@
 {
-  "httpMethod": "POST",
+  "httpMethod": "Get",
   "path": "/templates",
   "queryStringParameters": {
-    "limit": "10"
+    "userId": "b8a36d7f-1713-4ac5-80c7-4ff45ef89f7f"
   },
   "headers": {
     "Content-Type": "application/json"
   },
-  "body": "{\"Title\":\"Hello from the event.json body\", \"UserId\":\"dvqer2134\", \"Tasks\":[[\"task1 \", 23],[\"task 2\",44]]}"
+  "body": "{\"msg\":\"Hello from the event.json body\"}"
 }

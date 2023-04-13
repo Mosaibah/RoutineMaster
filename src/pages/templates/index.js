@@ -6,38 +6,43 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import Card from '../../components/Card';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Auth } from 'aws-amplify';
 
 const inter = Inter({ subsets: ['latin'] })
 
-
-const templates = [
-  {
-    title: "Template 1",
-    tasks: [
-      { name: "Task 1", duration: 30 },
-      { name: "Task 2", duration: 45 },
-      { name: "Task 3", duration: 60 },
-      { name: "Task 4", duration: 90 },
-    ],
-  },
-  {
-    title: "Template 2",
-    tasks: [
-      { name: "Task 1", duration: 25 },
-      { name: "Task 2", duration: 40 },
-    ],
-  },
-  {
-    title: "Template 3",
-    tasks: [
-      { name: "Task 2", duration: 35 },
-      { name: "Task 3", duration: 50 },
-      { name: "Task 4", duration: 80 },
-    ],
-  },
-];
-
 export default function Templates() {
+
+  const [templatesData, setTemplatesData] = useState([]);
+
+  useEffect(() => {
+    async function fetchTemplates() {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const userId = user.attributes.sub;
+        const endpoint = `https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/templates?userId=${userId}`;
+        console.log(userId)
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+    
+        const templates = await response.json();
+        setTemplatesData(templates)
+        console.log('Templates:', templates);
+      } catch (error) {
+        console.error('Error fetching templates:', error);
+      }
+    }
+
+    fetchTemplates();
+  }, []);
 
   const handleSelect = () => {
     console.log('Card selected');
@@ -54,8 +59,8 @@ export default function Templates() {
         </Link>
       </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {templates.map((template, index) => (
-            <Card key={index} title={template.title} 
+          {templatesData.map((template, index) => (
+            <Card key={index} title={template.templateName} 
                   tasks={template.tasks} onSelect={handleSelect} 
                   typeOfButton="Update"
                   color="amber"/>

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Auth } from 'aws-amplify';
+import { useRouter } from 'next/router';
 
 export default function CreateTemplate() {
   const [Title, setTitle] = useState('');
   const [tasks, setTasks] = useState([{ taskName: '', duration: '' }]);
+  const router = useRouter();
 
   const GetUserData =  async () => {
     const { attributes } = await Auth.currentAuthenticatedUser();
@@ -51,6 +53,7 @@ export default function CreateTemplate() {
 
       const responseData = await response.json();
       console.log('Response data:', responseData);
+      router.push('/templates')
     } catch (error) {
       console.error('Error submitting the form:', error);
     }

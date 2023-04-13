@@ -39,11 +39,11 @@ app.use(function(req, res, next) {
 
 
 const pool = new Pool({
-  host: process.env.HOST,
-  port: process.env.PORT,
-  database: process.env.DATABASE,
-  user: process.env.USERNAME,
-  password: process.env.PASSWORD,
+  host: process.env.host,
+  port: process.env.port,
+  database: process.env.database,
+  user: process.env.user,
+  password: process.env.password,
   ssl: {
     rejectUnauthorized: false,
   },
@@ -102,8 +102,13 @@ app.get('/templates', async (req, res) => {
 ****************************/
 
 app.post('/templates', async (req, res) => {
-  const userId = req.user.sub; // Get the user's sub attribute from Cognito
-  const { templateName, tasks } = req.body;
+  // console.log(req)
+  // const userId = req.user.sub; // Get the user's sub attribute from Cognito
+  const { Title, UserId, Tasks } = req.body;
+  console.log(req);
+  console.log(Title);
+  console.log(UserId);
+  console.log(Tasks);
 
   const client = await pool.connect();
 
@@ -112,16 +117,17 @@ app.post('/templates', async (req, res) => {
 
     // Insert the new template into the templates table
     const templateResult = await client.query(
-      'INSERT INTO Templates (Name, UserId) VALUES ($1, $2) RETURNING id',
-      [templateName, userId]
+      'INSERT INTO public."Templates" ("Name", "UserId") VALUES ($1, $2) RETURNING "Id"',
+      [Title, UserId]
     );
 
-    const templateId = templateResult.rows[0].id;
-
+    const templateId = templateResult.rows[0].Id;
+    console.log(templateId)
+    console.log(Tasks)
     // Insert the tasks into the tasks table
-    const tasksPromises = tasks.map(([taskName, duration]) =>
+    const tasksPromises = Tasks.map(([taskName, duration]) =>
       client.query(
-        'INSERT INTO Tasks (Name, Duration, TemplateId) VALUES ($1, $2, $3)',
+        'INSERT INTO public."Tasks" ("Name", "Duration", "TemplateId") VALUES ($1, $2, $3)',
         [taskName, duration, templateId]
       )
     );

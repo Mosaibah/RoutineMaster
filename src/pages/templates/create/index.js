@@ -1,8 +1,14 @@
 import { useState } from 'react';
+import { Auth } from 'aws-amplify';
 
 export default function CreateTemplate() {
   const [title, setTitle] = useState('');
   const [tasks, setTasks] = useState([{ name: '', duration: '' }]);
+
+  const GetUserData =  async () => {
+    const { attributes } = await Auth.currentAuthenticatedUser();
+    return attributes.sub
+  }
 
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleTaskNameChange = (index, e) => {
@@ -22,11 +28,29 @@ export default function CreateTemplate() {
     setTasks(tasks.filter((_,i) => i !== index))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Process the form data here, e.g., send it to your API, save it in a database, etc.
-    console.log({ title, tasks });
+    const userId = await GetUserData()
+    try {
+      const response = await fetch('https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/templates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, userId , tasks })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      console.log('Response data:', responseData);
+    } catch (error) {
+      console.error('Error submitting the form:', error);
+    }
   };
+
 
   return (
     <div className="container mx-auto px-4 py-8  md:px-32 lg:w-4/6 lg:mx-auto">

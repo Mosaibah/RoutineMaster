@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Auth } from 'aws-amplify';
 
 export default function CreateTemplate() {
-  const [title, setTitle] = useState('');
-  const [tasks, setTasks] = useState([{ name: '', duration: '' }]);
+  const [Title, setTitle] = useState('');
+  const [tasks, setTasks] = useState([{ taskName: '', duration: '' }]);
 
   const GetUserData =  async () => {
     const { attributes } = await Auth.currentAuthenticatedUser();
@@ -12,7 +12,7 @@ export default function CreateTemplate() {
 
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleTaskNameChange = (index, e) => {
-    const newTasks = tasks.map((task, i) => (i === index ? { ...task, name: e.target.value } : task));
+    const newTasks = tasks.map((task, i) => (i === index ? { ...task, taskName: e.target.value } : task));
     setTasks(newTasks);
   };
   const handleTaskDurationChange = (index, e) => {
@@ -21,7 +21,7 @@ export default function CreateTemplate() {
   };
 
   const addTask = () => {
-    setTasks([...tasks, { name: '', duration: '' }]);
+    setTasks([...tasks, { taskName: '', duration: '' }]);
   };
 
   const removeTask = (index) => {
@@ -30,15 +30,23 @@ export default function CreateTemplate() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userId = await GetUserData()
+    const UserId = await GetUserData()
+    const TasksSend = Object.values(tasks)
+    const Tasks = TasksSend.map((task) => [
+      task.taskName,
+      task.duration,
+    ]);
+    console.log(Tasks)
+    console.log(JSON.stringify({ Title, UserId , Tasks }))
     try {
       const response = await fetch('https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/templates', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, userId , tasks })
+        body: JSON.stringify({ Title, UserId , Tasks })
       });
+      // console.log({Tasks}.Tasks)
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -57,13 +65,13 @@ export default function CreateTemplate() {
       <h1 className="text-2xl font-bold mb-6">Create Template</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="Title" className="block text-sm font-medium text-gray-700">
             Title
           </label>
           <input
-            id="title"
+            id="Title"
             type="text"
-            value={title}
+            value={Title}
             onChange={handleTitleChange}
             className="mt-1 block w-full border-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           />
@@ -91,7 +99,7 @@ export default function CreateTemplate() {
                     </label>
                     <input
                         id={`task-duration-${index}`}
-                        type="text"
+                        type="number"
                         value={task.duration}
                         onChange={(e) => handleTaskDurationChange(index, e)}
                         className="mt-1 block w-full border-2 rounded-md border-gray-200 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"

@@ -98,17 +98,46 @@ app.get('/templates', async (req, res) => {
 });
 
 /****************************
-* Example post method *
+*  post method *
 ****************************/
 
-app.post('/templates', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
-});
+app.post('/templates', async (req, res) => {
+  const userId = req.user.sub; // Get the user's sub attribute from Cognito
+  const { templateName, tasks } = req.body;
 
-app.post('/templates/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    // Insert the new template into the templates table
+    const templateResult = await client.query(
+      'INSERT INTO Templates (Name, UserId) VALUES ($1, $2) RETURNING id',
+      [templateName, userId]
+    );
+
+    const templateId = templateResult.rows[0].id;
+
+    // Insert the tasks into the tasks table
+    const tasksPromises = tasks.map(([taskName, duration]) =>
+      client.query(
+        'INSERT INTO Tasks (Name, Duration, TemplateId) VALUES ($1, $2, $3)',
+        [taskName, duration, templateId]
+      )
+    );
+
+    await Promise.all(tasksPromises);
+
+    await client.query('COMMIT');
+
+    res.status(201).json({ message: 'Template and tasks created' });
+  } catch (error) {
+    console.error(error);
+    await client.query('ROLLBACK');
+    res.status(500).json({ error: 'An error occurred while creating data' });
+  } finally {
+    client.release();
+  }
 });
 
 /****************************

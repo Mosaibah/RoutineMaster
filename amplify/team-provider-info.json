@@ -21,8 +21,13 @@
           "user": "doadmin",
           "password": "m0sAibah.s",
           "database": "RoutineMaster",
-          "port": "5432"
+          "port": "5432",
+          "deploymentBucketName": "amplify-amplifyf721980bed764-staging-155551-deployment",
+          "s3Key": "amplify-builds/Template-516b53384c4b5065352b-build.zip"
         }
+      },
+      "api": {
+        "Template": {}
       }
     }
   }

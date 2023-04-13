@@ -63,6 +63,14 @@
         }
       ]
     },
+    "AMPLIFY_function_Template_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Template"
+        }
+      ]
+    },
     "AMPLIFY_function_Template_host": {
       "usedBy": [
         {
@@ -80,6 +88,14 @@
       ]
     },
     "AMPLIFY_function_Template_port": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Template"
+        }
+      ]
+    },
+    "AMPLIFY_function_Template_s3Key": {
       "usedBy": [
         {
           "category": "function",

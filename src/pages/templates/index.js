@@ -28,7 +28,7 @@ export default function Templates() {
             'Content-Type': 'application/json',
           }
         });
-    
+    console.log(response)
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
         }
@@ -60,7 +60,7 @@ export default function Templates() {
       </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {templatesData.map((template, index) => (
-            <Card key={index} title={template.templateName} 
+            <Card key={index} title={template.title} templateId={template.id}
                   tasks={template.tasks} onSelect={handleSelect} 
                   typeOfButton="Update"
                   color="amber"/>

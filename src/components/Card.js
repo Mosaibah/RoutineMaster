@@ -3,14 +3,14 @@ import React from 'react'
 import TaskCard from '../components/TaskCard'
 import Button from '../components/Button'
 
-const Card = ({ title, tasks, onSelect , typeOfButton, color}) => {
+const Card = ({ title, tasks, onSelect , typeOfButton, color, templateId}) => {
     const totalTasks = tasks.length;
     const totalTime = tasks.reduce((acc, task) => acc + task.duration, 0);
   
     return (
       <div className="bg-white shadow-xl rounded p-6 w-full border-2 border-gray-400">
         <div className="flex justify-between items-center mb-4">
-        <span className="text-md font-bold ">{title}</span>
+        <span className="text-md font-semibold ">{title}</span>
           <span>{totalTasks} tasks</span>
           <span>{totalTime} min</span>
         </div>
@@ -20,7 +20,7 @@ const Card = ({ title, tasks, onSelect , typeOfButton, color}) => {
           ))}
         </div>
         <div className='flex flex-col justify-center'>
-            <Button name={typeOfButton} onSelect={onSelect} color={color}/>
+            <Button name={typeOfButton} onSelect={onSelect} color={color} templateId={templateId}/>
         </div>
       </div>
     );

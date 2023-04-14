@@ -82,6 +82,7 @@ app.get('/templates', async (req, res) => {
     const combinedResults = templates.map((template, index) => {
       const tasks = tasksResults[index].rows;
       return {
+        id: template.Id,
         title: template.Name,
         tasks: tasks.map((task) => ({ name: task.Name, duration: task.Duration })),
       };
@@ -91,6 +92,49 @@ app.get('/templates', async (req, res) => {
     console.log(combinedResults);
 
     res.json(combinedResults);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while fetching data' });
+  } finally {
+    client.release();
+  }
+});
+
+/****************************
+*  get one method *
+****************************/
+app.get('/templates/:id', async (req, res) => {
+  const id = req.params.id;
+  const userId = req.query.userId; // Get the user's sub attribute from Cognito
+  const client = await pool.connect();
+
+  try {
+    // Query the templates table for the template with the given ID
+    const templateResult = await client.query(
+      'SELECT * FROM public."Templates" WHERE "Id" = $1 and "UserId" =$2 ',
+      [id, userId]
+    );
+    const template = templateResult.rows[0];
+    if (template == undefined){
+      res.status(500).json({ error: 'No template' });
+    }
+    // Query the tasks table for tasks belonging to this template
+    const tasksResult = await client.query(
+      'SELECT * FROM public."Tasks" WHERE "TemplateId" = $1',
+      [id]
+    );
+    const tasks = tasksResult.rows;
+
+    // Combine the template and tasks into a single object
+    const result = {
+      title: template.Name,
+      tasks: tasks.map(task => ({ 
+        name: task.Name, 
+        duration: task.Duration 
+      })),
+    };
+
+    res.json(result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while fetching data' });
@@ -146,17 +190,47 @@ app.post('/templates', async (req, res) => {
 /****************************
 * Example put method *
 ****************************/
+app.put('/templates/:id', async (req, res) => {
+  const id = req.params.id;
+  const { Title, UserId, Tasks } = req.body;
 
-app.put('/templates', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    // Update the template in the templates table
+    const templateResult = await client.query(
+      'UPDATE public."Templates" SET "Name" = $1, "UserId" = $2 WHERE "Id" = $3 RETURNING "Id"',
+      [Title, UserId, id]
+    );
+
+    const templateId = templateResult.rows[0].Id;
+
+    // Delete existing tasks for this template
+    await client.query('DELETE FROM public."Tasks" WHERE "TemplateId" = $1', [id]);
+
+    // Insert the new tasks into the tasks table
+    const tasksPromises = Tasks.map(([taskName, duration]) =>
+      client.query(
+        'INSERT INTO public."Tasks" ("Name", "Duration", "TemplateId") VALUES ($1, $2, $3)',
+        [taskName, duration, templateId]
+      )
+    );
+
+    await Promise.all(tasksPromises);
+
+    await client.query('COMMIT');
+
+    res.status(200).json({ message: 'Template and tasks updated' });
+  } catch (error) {
+    console.error(error);
+    await client.query('ROLLBACK');
+    res.status(500).json({ error: 'An error occurred while updating data' });
+  } finally {
+    client.release();
+  }
 });
-
-app.put('/templates/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
-});
-
 /****************************
 * Example delete method *
 ****************************/

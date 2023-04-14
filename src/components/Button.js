@@ -1,13 +1,14 @@
 import React from "react"
-
-const Button = ({ name, onClick, color }) => {
+import Link from "next/link";
+const Button = ({ name, onClick, color, templateId }) => {
     return (
-        <button
+        <Link
             className={`text-${color}-600 py-2 px-4 rounded-md font-medium border-2 border-${color}-600`}
-            onClick={onClick}
+            // onClick={onClick}
+            href={`/templates/${templateId}`}
             >
             {name}
-            </button>
+            </Link>
     )
 }
 

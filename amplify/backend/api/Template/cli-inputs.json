@@ -7,6 +7,20 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/home": {
+      "name": "/home",
+      "lambdaFunction": "Core",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/choose-template": {
+      "name": "/choose-template",
+      "lambdaFunction": "Core",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

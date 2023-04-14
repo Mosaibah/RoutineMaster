@@ -5,38 +5,51 @@ import { Inter } from 'next/font/google'
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Card from '../components/Card';
+import { useEffect, useState } from 'react';
+import { Auth } from 'aws-amplify';
 
 const inter = Inter({ subsets: ['latin'] })
 
-
-const templates = [
-  {
-    title: "Template 1",
-    tasks: [
-      { name: "Task 1", duration: 30 },
-      { name: "Task 2", duration: 45 },
-      { name: "Task 3", duration: 60 },
-      { name: "Task 4", duration: 90 },
-    ],
-  },
-  {
-    title: "Template 2",
-    tasks: [
-      { name: "Task 1", duration: 25 },
-      { name: "Task 2", duration: 40 },
-    ],
-  },
-  {
-    title: "Template 3",
-    tasks: [
-      { name: "Task 2", duration: 35 },
-      { name: "Task 3", duration: 50 },
-      { name: "Task 4", duration: 80 },
-    ],
-  },
-];
-
 export default function Home() {
+
+  const [templatesData, setTemplatesData] = useState([]);
+  const [todayTemplate, settodayTemplate] = useState([]);
+  const [hasRecordToday, sethasRecordToday] = useState([]);
+
+
+  useEffect(() => {
+    async function fetchTemplates() {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const userId = user.attributes.sub;
+        const endpoint = `https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/home?userId=${userId}`;
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        // console.log(response)
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        if(data.hasRecordToday){
+          settodayTemplate(data)
+        }else{
+          setTemplatesData(data)
+        }
+        sethasRecordToday(data.hasRecordToday)
+        // setTemplatesData(templates)
+        console.log('data:', data);
+      } catch (error) {
+        console.error('Error fetching templates:', error);
+      }
+    }
+
+    fetchTemplates();
+  }, []);
 
   const handleSelect = () => {
     console.log('Card selected');
@@ -49,12 +62,12 @@ export default function Home() {
       </div>
       <div className="mx-6 px-4 py-8">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {templates.map((template, index) => (
-            <Card key={index} title={template.title} 
+          {!hasRecordToday ? templatesData.map((template, index) => (
+            <Card key={index} title={template.title} templateId={template.id}
                   tasks={template.tasks} onSelect={handleSelect} 
                   typeOfButton="Select"
                   color="green"/>
-          ))}
+          )): <span></span>}
         </div>
       </div>
   </>

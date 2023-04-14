@@ -9,6 +9,14 @@
           ],
           "category": "function",
           "resourceName": "Template"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "Core"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -47,6 +55,12 @@
     }
   },
   "function": {
+    "Core": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "Template": {
       "build": true,
       "dependsOn": [],
@@ -55,6 +69,62 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_Core_database": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Core"
+        }
+      ]
+    },
+    "AMPLIFY_function_Core_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Core"
+        }
+      ]
+    },
+    "AMPLIFY_function_Core_host": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Core"
+        }
+      ]
+    },
+    "AMPLIFY_function_Core_password": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Core"
+        }
+      ]
+    },
+    "AMPLIFY_function_Core_port": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Core"
+        }
+      ]
+    },
+    "AMPLIFY_function_Core_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Core"
+        }
+      ]
+    },
+    "AMPLIFY_function_Core_user": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Core"
+        }
+      ]
+    },
     "AMPLIFY_function_Template_database": {
       "usedBy": [
         {

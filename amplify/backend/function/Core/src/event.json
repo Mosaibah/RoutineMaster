@@ -7,5 +7,5 @@
   "headers": {
     "Content-Type": "application/json"
   },
-  "body": "{\"msg\":\"Hello from the event.json body\"}"
+  "body": "{\"templateId\":41, \"userId\": \"b8a36d7f-1713-4ac5-80c7-4ff45ef89f7f\"}"
 }

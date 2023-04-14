@@ -91,6 +91,7 @@ app.get('/home', async (req, res) => {
         hasRecordToday: hasRecordToday,
         title: currentTemplate.Name,
         tasks: tasks.map(task => ({ 
+          id: task.Id,
           name: task.Name, 
           duration: task.Duration 
         })),
@@ -123,7 +124,7 @@ app.get('/home', async (req, res) => {
         hasRecordToday: hasRecordToday,
         id: template.Id,
         title: template.Name,
-        tasks: tasks.map((task) => ({ name: task.Name, duration: task.Duration })),
+        tasks: tasks.map((task) => ({  name: task.Name, duration: task.Duration })),
       };
     });
 

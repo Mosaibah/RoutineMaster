@@ -9,15 +9,18 @@ import { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import { useRef } from 'react';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const chartRef = useRef(null);
 
   const [templatesData, setTemplatesData] = useState([]);
   const [todayTemplate, settodayTemplate] = useState([]);
   const [hasRecordToday, sethasRecordToday] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [chartOption, setChartOption] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const colors = [
@@ -65,8 +68,12 @@ export default function Home() {
             const TasksDuration = TasksObj.map((task) => [
               task.duration,
             ]);
+            const TasksId = TasksObj.map((task) => [
+              task.id,
+            ]);
             console.log(TasksName)
             console.log(TasksDuration)
+            console.log(TasksId)
           const chartSampleData = {
             labels : TasksName,
             datasets: [
@@ -80,6 +87,21 @@ export default function Home() {
               },
             ],
           }
+
+          const options = {
+            onElementsClick: (event, elements) => {
+              if (elements.length > 0) {
+                // const chart = chartRef.current;
+                const element = elements[0];
+                const task = element._model.label;
+                console.log(task)
+                // Navigate to the task page using the task id
+                router.push(`/${task.id}`);
+              }
+            },
+            // ... Other chart options
+          };
+          setChartOption(options)
           setChartData(chartSampleData)
           setIsLoading(false)
           // setChartData()
@@ -101,37 +123,8 @@ export default function Home() {
     console.log('Card selected');
   };
   
-
-  const handleDataChart = () => {
-    
-  }
   ChartJS.register(ArcElement, Tooltip, Legend);
-  const data = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-    datasets: [
-      {
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
+  
 
 
   return (
@@ -162,7 +155,7 @@ export default function Home() {
           </div>
             <div className='md:w-1/2 md:h-1/2 mx-auto my-12'>
               
-          <Pie data={chartData} /> 
+          <Pie chartRef={chartRef} data={chartData} options={chartOption}/> 
           </div>
           </>
           ))}

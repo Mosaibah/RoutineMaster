@@ -1,5 +1,5 @@
 {
-  "httpMethod": "Get",
+  "httpMethod": "DELETE",
   "path": "/templates/17",
   "queryStringParameters": {
     "userId": "b8a36d7f-1713-4ac5-80c7-4ff45ef89f7f"

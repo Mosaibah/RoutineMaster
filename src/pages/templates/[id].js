@@ -31,6 +31,18 @@ export default function CreateTemplate() {
   const removeTask = (index) => {
     setTasks(tasks.filter((_,i) => i !== index))
   }
+  const deleteTemplate = async (e) => {
+    e.preventDefault();
+    const response = await fetch(`https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/templates/${id}`, {
+      method: 'DELETE'
+    });
+  
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  
+    router.push('/templates');
+  }
 
   
   useEffect(() => {
@@ -148,6 +160,12 @@ export default function CreateTemplate() {
           className="mt-4 w-3/4 ml-4 inline-flex items-center justify-center p-2 rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
           >
           <span>Create</span>
+        </button>
+        <button
+          onClick={deleteTemplate}
+          className="mt-4 w-1/4 ml-4 inline-flex items-center justify-center p-2 rounded-md border-red-600 border-2 text-red-600 bg-white"
+          >
+          <span>Delete</span>
         </button>
             </div>
       </form>

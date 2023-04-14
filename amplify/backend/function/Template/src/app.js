@@ -234,15 +234,30 @@ app.put('/templates/:id', async (req, res) => {
 /****************************
 * Example delete method *
 ****************************/
+app.delete('/templates/:id', async (req, res) => {
+  const id = req.params.id;
 
-app.delete('/templates', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
-});
+  const client = await pool.connect();
 
-app.delete('/templates/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
+  try {
+    await client.query('BEGIN');
+
+    // Delete all tasks for the template
+    await client.query('DELETE FROM public."Tasks" WHERE "TemplateId" = $1', [id]);
+
+    // Delete the template
+    await client.query('DELETE FROM public."Templates" WHERE "Id" = $1', [id]);
+
+    await client.query('COMMIT');
+
+    res.status(200).json({ message: 'Template deleted' });
+  } catch (error) {
+    console.error(error);
+    await client.query('ROLLBACK');
+    res.status(500).json({ error: 'An error occurred while deleting data' });
+  } finally {
+    client.release();
+  }
 });
 
 app.listen(3000, function() {

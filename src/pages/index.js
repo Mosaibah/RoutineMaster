@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 'use client'
 import React from 'react'
 import Image from 'next/image'
@@ -8,12 +9,13 @@ import Card from '../components/Card';
 import { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
-import { useRef } from 'react';
+import { Pie, getElementAtEvent } from 'react-chartjs-2';
+import ClickablePieChart from '../components/ClickablePieChart';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  ChartJS.register(ArcElement, Tooltip, Legend);
   const chartRef = useRef(null);
 
   const [templatesData, setTemplatesData] = useState([]);
@@ -22,7 +24,12 @@ export default function Home() {
   const [chartData, setChartData] = useState([]);
   const [chartOption, setChartOption] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [dataChart, setDataChart] = useState([])
+  const tasks = [
+    { id: '1', label: 'Task A', time: 120 },
+    { id: '2', label: 'Task B', time: 45 },
+    { id: '3', label: 'Task C', time: 75 },
+  ];
   const colors = [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -61,56 +68,16 @@ export default function Home() {
         const data = await response.json();
         if(data.hasRecordToday){
           settodayTemplate(data)
-            const TasksObj = Object.values(data.tasks)
-            const TasksName = TasksObj.map((task) => [
-              task.name,
-            ]);
-            const TasksDuration = TasksObj.map((task) => [
-              task.duration,
-            ]);
-            const TasksId = TasksObj.map((task) => [
-              task.id,
-            ]);
-            console.log(TasksName)
-            console.log(TasksDuration)
-            console.log(TasksId)
-          const chartSampleData = {
-            labels : TasksName,
-            datasets: [
-              {
-                label: '# of Votes',
-                data: TasksDuration,
-                backgroundColor: 
-                  colors.slice(0, TasksName.length),
-                borderColor: borderColor.slice(0, TasksName.length),
-                borderWidth: 1,
-              },
-            ],
-          }
-
-          const options = {
-            onElementsClick: (event, elements) => {
-              if (elements.length > 0) {
-                // const chart = chartRef.current;
-                const element = elements[0];
-                const task = element._model.label;
-                console.log(task)
-                // Navigate to the task page using the task id
-                router.push(`/${task.id}`);
-              }
-            },
-            // ... Other chart options
-          };
-          setChartOption(options)
-          setChartData(chartSampleData)
+          console.log(data['tasks'])
+          console.log(tasks)
+          setDataChart(data['tasks'])
+         
           setIsLoading(false)
-          // setChartData()
         }else{
           setTemplatesData(data)
         }
         sethasRecordToday(data.hasRecordToday)
-        // setTemplatesData(templates)
-        console.log('data:', data);
+        // console.log('data:', data);
       } catch (error) {
         console.error('Error fetching templates:', error);
       }
@@ -123,9 +90,11 @@ export default function Home() {
     console.log('Card selected');
   };
   
-  ChartJS.register(ArcElement, Tooltip, Legend);
-  
-
+  const handle = (event) => {
+    if(getElementAtEvent(chartRef.current, event).length > 0){
+      console.log(getElementAtEvent(chartRef.current, event)[0])
+    }
+  }
 
   return (
   <>
@@ -154,8 +123,8 @@ export default function Home() {
             GOOO
           </div>
             <div className='md:w-1/2 md:h-1/2 mx-auto my-12'>
-              
-          <Pie chartRef={chartRef} data={chartData} options={chartOption}/> 
+                <ClickablePieChart tasks={dataChart} />
+
           </div>
           </>
           ))}

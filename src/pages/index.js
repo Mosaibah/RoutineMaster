@@ -17,7 +17,26 @@ export default function Home() {
   const [templatesData, setTemplatesData] = useState([]);
   const [todayTemplate, settodayTemplate] = useState([]);
   const [hasRecordToday, sethasRecordToday] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const colors = [
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    // ... 20 colors
+  ];
+  const borderColor = [
+    'rgba(255, 99, 132, 1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)',
+  ];
 
   useEffect(() => {
     async function fetchTemplates() {
@@ -39,6 +58,31 @@ export default function Home() {
         const data = await response.json();
         if(data.hasRecordToday){
           settodayTemplate(data)
+            const TasksObj = Object.values(data.tasks)
+            const TasksName = TasksObj.map((task) => [
+              task.name,
+            ]);
+            const TasksDuration = TasksObj.map((task) => [
+              task.duration,
+            ]);
+            console.log(TasksName)
+            console.log(TasksDuration)
+          const chartSampleData = {
+            labels : TasksName,
+            datasets: [
+              {
+                label: '# of Votes',
+                data: TasksDuration,
+                backgroundColor: 
+                  colors.slice(0, TasksName.length),
+                borderColor: borderColor.slice(0, TasksName.length),
+                borderWidth: 1,
+              },
+            ],
+          }
+          setChartData(chartSampleData)
+          setIsLoading(false)
+          // setChartData()
         }else{
           setTemplatesData(data)
         }
@@ -56,7 +100,11 @@ export default function Home() {
   const handleSelect = () => {
     console.log('Card selected');
   };
+  
 
+  const handleDataChart = () => {
+    
+  }
   ChartJS.register(ArcElement, Tooltip, Legend);
   const data = {
     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -85,21 +133,39 @@ export default function Home() {
     ],
   };
 
+
   return (
   <>
+          {!hasRecordToday ? (
+      <>
       <div className=' px-2 py-4 bg-gray-300 font-white mt-4 mx-4 rounded-md text-center text-lg font-semibold'>
         Choose template for today
       </div>
       <div className="mx-6 px-4 py-8">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {!hasRecordToday ? templatesData.map((template, index) => (
+
+            {templatesData.map((template, index) => (
             <Card key={index} title={template.title} templateId={template.id}
                   tasks={template.tasks} onSelect={handleSelect} 
                   typeOfButton="Select"
                   color="green"/>
-          )): <Pie data={data} />}
+          ))}
+          
+          </div>
         </div>
-      </div>
+        </>
+          ):(  
+            isLoading ? <span></span> : (
+            <>
+            <div className=' px-2 py-4 mb-5 bg-gray-300 font-white mt-4 mx-4 rounded-md text-center text-lg font-semibold'>
+            GOOO
+          </div>
+            <div className='md:w-1/2 md:h-1/2 mx-auto my-12'>
+              
+          <Pie data={chartData} /> 
+          </div>
+          </>
+          ))}
   </>
   )
 }

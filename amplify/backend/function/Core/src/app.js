@@ -81,7 +81,7 @@ app.get('/home', async (req, res) => {
       const currentTemplate = templateResult.rows[0] 
       console.log(currentTemplate.Id)
       const tasksResult = await client.query(
-        'SELECT * FROM public."Tasks" WHERE "TemplateId" = $1',
+        'SELECT h."Id", t."Name", t."Duration", h."Status" FROM public."Tasks" t INNER JOIN public."TasksHistory" h ON t."Id" = h."TaskId" WHERE t."TemplateId" = $1',
         [currentTemplate.Id]
       );
       const tasks = tasksResult.rows;
@@ -93,7 +93,8 @@ app.get('/home', async (req, res) => {
         tasks: tasks.map(task => ({ 
           id: task.Id,
           name: task.Name, 
-          duration: task.Duration 
+          duration: task.Duration,
+          status: task.Status
         })),
       };
   

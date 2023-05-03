@@ -159,9 +159,29 @@ app.post('/choose-template', async (req, res) => {
   try {
     // Insert the new template into the templates table
     const templateResult = await client.query(
-      'INSERT INTO public."SelectedTemplate" ("UserId", "TemplateId", "Date") VALUES ($1, $2, current_date)',
+      'INSERT INTO public."SelectedTemplate" ("UserId", "TemplateId", "Date") VALUES ($1, $2, current_date) RETURNING "Id"',
       [userId, templateId]
     );
+    console.log(templateResult.rows[0])
+    const selectedTemplateId = templateResult.rows[0].Id;
+
+    const templateTasks = await client.query(
+      'SELECT * FROM public."Tasks" WHERE "TemplateId" = $1',
+      [templateId]
+    );
+
+    const tasksHistoryData = templateTasks.rows.map(task => `(${selectedTemplateId},${task.Id})`).join(',');
+
+    // Perform bulk insert into TasksHistory
+    const tasksHistoryResult = await client.query(
+      `INSERT INTO public."TasksHistory" ("SelectedTemplateId", "TaskId") VALUES ${tasksHistoryData}`
+    );
+
+
+    // Get all tasks where templateId
+    // insert to history with selectedId
+
+
     res.status(201).json({ message: 'Template and tasks created on TODAY' });
 
   } catch (error) {

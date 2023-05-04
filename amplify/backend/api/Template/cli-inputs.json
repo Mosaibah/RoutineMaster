@@ -21,6 +21,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/countdown/{id}": {
+      "name": "/countdown/{id}",
+      "lambdaFunction": "Core",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

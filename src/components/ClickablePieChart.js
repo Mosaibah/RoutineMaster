@@ -20,17 +20,21 @@ const ClickablePieChart = ({ tasks }) => {
             <th className="px-4 py-2">ID</th>
             <th className="px-4 py-2">Name</th>
             <th className="px-4 py-2">Duration</th>
+            <th className="px-4 py-2">Remaining</th>
             <th className="px-4 py-2">Status</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {tasks.map((task) => (
             <tr key={task.id}>
-              <Link href={`/history/${task.id}`} className="underline">
-                <td className="px-4 py-2">{task.id}</td>
-              </Link>
+              <td className="px-4 py-2">
+                <Link href={`/history/${task.id}`} className="underline">
+                  {task.id}
+                </Link>
+              </td>
               <td className="px-4 py-2">{task.name}</td>
               <td className="px-4 py-2">{task.duration}</td>
+              <td className="px-4 py-2">{task.remaining}</td>
               <td className="px-4 py-2">{task.status}</td>
             </tr>
           ))}

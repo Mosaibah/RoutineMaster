@@ -214,6 +214,41 @@ app.get("/countdown/:id", async (req, res) => {
     client.release();
   }
 });
+
+// *********************
+
+app.put("/countdown-update", async (req, res) => {
+  const { TasksHistoryId, Remaining, Status } = req.body;
+
+  if (!TasksHistoryId || Remaining === undefined || !Status) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    const query = `
+      UPDATE "TasksHistory"
+      SET "Remaining" = $1, "Status" = $2
+      WHERE "Id" = $3
+      RETURNING *;
+    `;
+
+    const tasksResult = await client.query(query, [Remaining, Status, TasksHistoryId]);
+
+    if (tasksResult.rowCount === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.json(tasksResult.rows[0]);
+  } catch (error) {
+    console.error("Error updating task:", error);
+    res.status(500).json({ error: "An error occurred while updating the task" });
+  } finally {
+    client.release();
+  }
+});
+
 app.listen(3000, function () {
   console.log("App started");
 });

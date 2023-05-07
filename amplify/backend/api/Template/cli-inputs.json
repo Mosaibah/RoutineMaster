@@ -28,6 +28,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/countdown-update": {
+      "name": "/countdown-update",
+      "lambdaFunction": "Core",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

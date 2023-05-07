@@ -65,7 +65,7 @@ app.get("/home", async (req, res) => {
   try {
     // Select from SelectedTemplate by user if TODAY
     const templateSelectResult = await client.query(
-      'SELECT * FROM public."SelectedTemplate" WHERE "UserId" =$1 and "Date" = current_date',
+      'SELECT * FROM public."SelectedTemplate" WHERE "UserId" =$1 and "Date" =  date(now() AT TIME ZONE \'UTC\' AT TIME ZONE \'AST\') ',
       [userId]
     );
     const hasRecordToday = templateSelectResult.rows.length > 0;
@@ -159,7 +159,7 @@ app.post("/choose-template", async (req, res) => {
   try {
     // Insert the new template into the templates table
     const templateResult = await client.query(
-      'INSERT INTO public."SelectedTemplate" ("UserId", "TemplateId", "Date") VALUES ($1, $2, current_date) RETURNING "Id"',
+      'INSERT INTO public."SelectedTemplate" ("UserId", "TemplateId", "Date") VALUES ($1, $2, date(now() AT TIME ZONE \'UTC\' AT TIME ZONE \'AST\')) RETURNING "Id"',
       [userId, templateId]
     );
     console.log(templateResult.rows[0]);

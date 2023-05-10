@@ -53,7 +53,7 @@ export default function Home() {
           setTemplatesData(data)
         }
         sethasRecordToday(data.hasRecordToday)
-        // console.log('data:', data);
+        console.log('data:', data);
       } catch (error) {
         console.error('Error fetching templates:', error);
       }
@@ -71,7 +71,6 @@ export default function Home() {
       console.log(getElementAtEvent(chartRef.current, event)[0])
     }
   }
-
 
   return (
   <>

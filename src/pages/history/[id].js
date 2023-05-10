@@ -91,8 +91,10 @@ const ClickablePieChart = () => {
           body: JSON.stringify(update),
         }
       );
+      console.log("response", response)
 
       if (!response.ok) {
+
         throw new Error(`HTTP error: ${response.status}`);
       }
     } catch (error) {

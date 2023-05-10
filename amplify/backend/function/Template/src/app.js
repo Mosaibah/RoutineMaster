@@ -64,7 +64,7 @@ app.get('/templates', async (req, res) => {
   try {
     // Query the templates table
     const templatesResult = await client.query(
-      'SELECT "Id", "Name" FROM public."Templates" WHERE "UserId" = $1 order by "Id" desc',
+      'SELECT "Id", "Name" FROM public."Templates" WHERE "UserId" = $1 and "IsDelete" = false order by "Id" desc',
       [userId]
     );
     const templates = templatesResult.rows;
@@ -237,31 +237,55 @@ app.put('/templates/:id', async (req, res) => {
 /****************************
 * Example delete method *
 ****************************/
-app.delete('/templates/:id', async (req, res) => {
-  const id = req.params.id;
+// app.delete('/templates/:id', async (req, res) => {
+//   const id = req.params.id;
+
+//   const client = await pool.connect();
+
+//   try {
+//     await client.query('BEGIN');
+
+//     // Delete all tasks for the template
+//     await client.query('DELETE FROM public."Tasks" WHERE "TemplateId" = $1', [id]);
+
+//     // Delete the template
+//     await client.query('DELETE FROM public."Templates" WHERE "Id" = $1', [id]);
+
+//     await client.query('COMMIT');
+
+//     res.status(200).json({ message: 'Template deleted' });
+//   } catch (error) {
+//     console.error(error);
+//     await client.query('ROLLBACK');
+//     res.status(500).json({ error: 'An error occurred while deleting data' });
+//   } finally {
+//     client.release();
+//   }
+// });
+
+/****************************
+* Example put method SOFT DELETE *
+****************************/
+app.put('/delete-template', async (req, res) => {
+  const { id } = req.body;
 
   const client = await pool.connect();
 
   try {
-    await client.query('BEGIN');
+    // Update the template in the templates table
+    const templateResult = await client.query(
+      'UPDATE public."Templates" SET "IsDelete" = true  WHERE "Id" = $1 ',
+      [id]
+    );
 
-    // Delete all tasks for the template
-    await client.query('DELETE FROM public."Tasks" WHERE "TemplateId" = $1', [id]);
-
-    // Delete the template
-    await client.query('DELETE FROM public."Templates" WHERE "Id" = $1', [id]);
-
-    await client.query('COMMIT');
-
-    res.status(200).json({ message: 'Template deleted' });
+    res.status(200).json({ message: 'Template deleted successfully' });
   } catch (error) {
     console.error(error);
-    await client.query('ROLLBACK');
-    res.status(500).json({ error: 'An error occurred while deleting data' });
+    res.status(500).json({ error: 'An error occurred while deleting template' });
   } finally {
     client.release();
   }
-});
+})
 
 app.listen(3000, function() {
     console.log("App started")

@@ -32,40 +32,67 @@ const ClickablePieChart = ({ tasks, taskHistoryId }) => {
     } catch (error) {
       console.error("Error updating countdown:", error);
     }
-    router.reload()
+    router.reload();
   };
 
   console.log("tasks", tasks);
   return (
     <>
-      <h1 className="text-xl font-bold mb-4">Tasks</h1>
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead>
-          <tr>
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Duration</th>
-            <th className="px-4 py-2">Remaining</th>
-            <th className="px-4 py-2">Status</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {tasks.map((task) => (
-            <tr key={task.id}>
-              <td className="px-4 py-2">
-                <Link href={`/history/${task.id}`} className="underline">
-                  {task.id}
-                </Link>
-              </td>
-              <td className="px-4 py-2">{task.name}</td>
-              <td className="px-4 py-2">{task.duration}</td>
-              <td className="px-4 py-2">{task.remaining}</td>
-              <td className="px-4 py-2">{task.status}</td>
+      <h1 className="text-xl font-bold mb-4 mx-3">Tasks</h1>
+      <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                ID
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Duration
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Remaining
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="mt-auto">
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {tasks.map((task) => (
+              <tr key={task.id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <Link
+                    href={`/history/${task.id}`}
+                    className="text-blue-600 hover:text-blue-800 underline"
+                  >
+                    {task.id}
+                  </Link>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{task.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{task.duration}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {task.remaining}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`${
+                      task.status === "Completed"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    } px-2 inline-flex text-xs leading-5 font-semibold rounded-full`}
+                  >
+                    {task.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-12 flex justify-end me-2">
         <button
           className="bg-white hover:bg-gray-100 text-red-700 text-xs font-semibold py-1 px-3 border-2 border-red-700 rounded  mr-2"
           onClick={clearToday}

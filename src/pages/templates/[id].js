@@ -33,12 +33,24 @@ export default function CreateTemplate() {
   }
   const deleteTemplate = async (e) => {
     e.preventDefault();
-    const response = await fetch(`https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/templates/${id}`, {
-      method: 'DELETE'
-    });
-  
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    try {
+      const response = await fetch(`https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/delete-template`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: id })
+      });
+
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
+
+      const responseData = await response.json();
+      console.log('Response data:', responseData);
+      // router.push('/templates')
+    } catch (error) {
+      console.error('Error submitting the form:', error);
     }
   
     router.push('/templates');
@@ -71,9 +83,9 @@ export default function CreateTemplate() {
         body: JSON.stringify({ Title, UserId, Tasks })
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
 
       const responseData = await response.json();
       console.log('Response data:', responseData);

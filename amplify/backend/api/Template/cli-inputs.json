@@ -42,6 +42,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/delete-template": {
+      "name": "/delete-template",
+      "lambdaFunction": "Template",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

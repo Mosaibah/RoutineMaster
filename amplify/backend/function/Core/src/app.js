@@ -102,7 +102,7 @@ app.get("/home", async (req, res) => {
       // select all inforamation from template teble and tasks
       // Query the templates table
       const templatesResult = await client.query(
-        'SELECT "Id", "Name" FROM public."Templates" WHERE "UserId" = $1 order by "Id" desc',
+        'SELECT "Id", "Name" FROM public."Templates" WHERE "UserId" = $1 and "IsDelete" = false order by "Id" desc',
         [userId]
       );
       const templates = templatesResult.rows;
@@ -110,7 +110,7 @@ app.get("/home", async (req, res) => {
       // Query the tasks table for each template
       const tasksPromises = templates.map((template) =>
         client.query(
-          'SELECT "Id", "Name", "Duration" FROM public."Tasks" WHERE "TemplateId" = $1',
+          'SELECT "Id", "Name", "Duration" FROM public."Tasks" WHERE "IsDelete" = false and "TemplateId" = $1',
           [template.Id]
         )
       );
@@ -240,7 +240,7 @@ app.put("/countdown-update", async (req, res) => {
     if (tasksResult.rowCount === 0) {
       return res.status(404).json({ error: "Task not found" });
     }
-
+    console.log("inside", tasksResult)
     res.json(tasksResult.rows[0]);
   } catch (error) {
     console.error("Error updating task:", error);

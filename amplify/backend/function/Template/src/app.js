@@ -71,7 +71,7 @@ app.get('/templates', async (req, res) => {
 
     // Query the tasks table for each template
     const tasksPromises = templates.map((template) =>
-      client.query('SELECT "Id", "Name", "Duration" FROM public."Tasks" WHERE "TemplateId" = $1', [
+      client.query('SELECT "Id", "Name", "Duration" FROM public."Tasks" WHERE "TemplateId" = $1 and "IsDelete" = false ', [
         template.Id,
       ])
     );
@@ -120,7 +120,7 @@ app.get('/templates/:id', async (req, res) => {
     }
     // Query the tasks table for tasks belonging to this template
     const tasksResult = await client.query(
-      'SELECT * FROM public."Tasks" WHERE "TemplateId" = $1',
+      'SELECT * FROM public."Tasks" WHERE "TemplateId" = $1 and "IsDelete" = false',
       [id]
     );
     const tasks = tasksResult.rows;
@@ -211,7 +211,7 @@ app.put('/templates/:id', async (req, res) => {
     const templateId = templateResult.rows[0].Id;
 
     // Delete existing tasks for this template
-    await client.query('DELETE FROM public."Tasks" WHERE "TemplateId" = $1', [id]);
+    await client.query('UPDATE public."Tasks" set "IsDelete" = true WHERE "TemplateId" = $1', [id]);
 
     // Insert the new tasks into the tasks table
     const tasksPromises = Tasks.map(([taskName, duration]) =>

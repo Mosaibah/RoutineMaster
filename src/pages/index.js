@@ -45,7 +45,7 @@ export default function Home() {
         const data = await response.json();
         if(data.hasRecordToday){
           settodayTemplate(data)
-          console.log(data['tasks'])
+          console.log("full data", data)
           setDataChart(data['tasks'])
          
           setIsLoading(false)
@@ -71,6 +71,7 @@ export default function Home() {
       console.log(getElementAtEvent(chartRef.current, event)[0])
     }
   }
+
 
   return (
   <>
@@ -99,7 +100,7 @@ export default function Home() {
             GOOO
           </div>
             <div className='md:w-1/2 md:h-1/2 mx-auto my-12'>
-                <ClickablePieChart tasks={dataChart} />
+                <ClickablePieChart tasks={dataChart} taskHistoryId={todayTemplate.taskHistoryId} />
 
           </div>
           </>

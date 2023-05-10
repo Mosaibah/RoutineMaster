@@ -35,6 +35,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/clear-today": {
+      "name": "/clear-today",
+      "lambdaFunction": "Core",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

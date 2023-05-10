@@ -65,7 +65,7 @@ app.get("/home", async (req, res) => {
   try {
     // Select from SelectedTemplate by user if TODAY
     const templateSelectResult = await client.query(
-      'SELECT * FROM public."SelectedTemplate" WHERE "UserId" =$1 and "Date" =  date(now() AT TIME ZONE \'UTC\' AT TIME ZONE \'AST\') ',
+      'SELECT * FROM public."SelectedTemplate" WHERE "UserId" =$1 and "IsDelete" = false and "Date" =  date(now() AT TIME ZONE \'UTC\' AT TIME ZONE \'AST\') ',
       [userId]
     );
     const hasRecordToday = templateSelectResult.rows.length > 0;
@@ -86,6 +86,7 @@ app.get("/home", async (req, res) => {
       const result = {
         hasRecordToday: hasRecordToday,
         title: currentTemplate.Name,
+        taskHistoryId: templateSelectResult.rows[0].Id,
         tasks: tasks.map((task) => ({
           id: task.Id,
           name: task.Name,
@@ -235,6 +236,40 @@ app.put("/countdown-update", async (req, res) => {
     `;
 
     const tasksResult = await client.query(query, [Remaining, Status, TasksHistoryId]);
+
+    if (tasksResult.rowCount === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.json(tasksResult.rows[0]);
+  } catch (error) {
+    console.error("Error updating task:", error);
+    res.status(500).json({ error: "An error occurred while updating the task" });
+  } finally {
+    client.release();
+  }
+});
+
+// *********************
+
+app.put("/clear-today", async (req, res) => {
+  const { TasksHistoryId } = req.body;
+
+  if (!TasksHistoryId) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    const query = `
+      UPDATE "SelectedTemplate"
+      SET "IsDelete" = true
+      WHERE "Id" = $1
+      RETURNING *;
+    `;
+
+    const tasksResult = await client.query(query, [TasksHistoryId]);
 
     if (tasksResult.rowCount === 0) {
       return res.status(404).json({ error: "Task not found" });

@@ -3,11 +3,36 @@ import { useRouter } from "next/router";
 import { VictoryPie, VictoryLabel } from "victory";
 import Link from "next/link";
 
-const ClickablePieChart = ({ tasks }) => {
+const ClickablePieChart = ({ tasks, taskHistoryId }) => {
   const router = useRouter();
 
   const handleClick = (event, id) => {
     router.push(`/task/${id}`);
+  };
+
+  const clearToday = async () => {
+    let update = {
+      TasksHistoryId: taskHistoryId,
+    };
+    try {
+      const response = await fetch(
+        "https://6i4ntknht5.execute-api.us-east-1.amazonaws.com/staging/clear-today",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(update),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error updating countdown:", error);
+    }
+    router.reload()
   };
 
   console.log("tasks", tasks);
@@ -40,7 +65,15 @@ const ClickablePieChart = ({ tasks }) => {
           ))}
         </tbody>
       </table>
-      <svg viewBox="0 0 400 400">
+      <div className="mt-auto">
+        <button
+          className="bg-white hover:bg-gray-100 text-red-700 text-xs font-semibold py-1 px-3 border-2 border-red-700 rounded  mr-2"
+          onClick={clearToday}
+        >
+          Delete Today
+        </button>
+      </div>
+      {/* <svg viewBox="0 0 400 400">
         <VictoryPie
           standalone={false}
           width={400}
@@ -62,7 +95,7 @@ const ClickablePieChart = ({ tasks }) => {
             },
           ]}
         />
-      </svg>
+      </svg> */}
     </>
   );
 };

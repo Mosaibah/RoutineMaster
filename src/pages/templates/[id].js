@@ -86,7 +86,7 @@ export default function CreateTemplate() {
 
   return (
     <div className="container mx-auto px-4 py-8  md:px-32 lg:w-4/6 lg:mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Create Template</h1>
+      <h1 className="text-2xl font-bold mb-6">Update Template</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="Title" className="block text-sm font-medium text-gray-700">
@@ -159,7 +159,7 @@ export default function CreateTemplate() {
           type="submit"
           className="mt-4 w-3/4 ml-4 inline-flex items-center justify-center p-2 rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
           >
-          <span>Create</span>
+          <span>Update</span>
         </button>
         <button
           onClick={deleteTemplate}

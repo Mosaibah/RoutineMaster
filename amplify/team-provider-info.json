@@ -32,7 +32,7 @@
           "database": "RoutineMaster",
           "port": "5432",
           "deploymentBucketName": "amplify-amplifyf721980bed764-staging-155551-deployment",
-          "s3Key": "amplify-builds/Core-7467414649347674686d-build.zip"
+          "s3Key": "amplify-builds/Core-51305571346468667666-build.zip"
         }
       },
       "api": {

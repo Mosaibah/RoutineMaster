@@ -35,6 +35,7 @@ const ClickablePieChart = () => {
         }
 
         const data = await response.json();
+        data.Remaining = data.Remaining * 60
         setTask(data);
         setTimeLeft(data.Remaining);
         setLoading(false);
@@ -67,7 +68,6 @@ const ClickablePieChart = () => {
     if (!timerStarted) {
       return;
     }
-    console.log("update: ", remainingTime);
 
     // status = (Paused, 0=>Completed)
     // remaining = remainingTime
@@ -75,7 +75,7 @@ const ClickablePieChart = () => {
     let status = remainingTime ? "Paused" : "Completed";
     let update = {
       TasksHistoryId: historyId,
-      Remaining: remainingTime,
+      Remaining: parseInt(remainingTime / 60),
       Status: status,
     };
     console.log("put request", update);

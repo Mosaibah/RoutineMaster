@@ -77,7 +77,7 @@ app.get("/home", async (req, res) => {
       const currentTemplate = templateResult.rows[0];
       console.log(currentTemplate.Id);
       const tasksResult = await client.query(
-        'SELECT h."Id", t."Name", t."Duration", h."Status", h."Remaining" FROM public."Tasks" t INNER JOIN public."TasksHistory" h ON t."Id" = h."TaskId" WHERE t."TemplateId" = $1',
+        'SELECT h."Id", t."Name", t."Duration", h."Status", h."Remaining" FROM public."Tasks" t INNER JOIN public."TasksHistory" h ON t."Id" = h."TaskId" INNER JOIN public."SelectedTemplate" st ON st."Id" = h."SelectedTemplateId" WHERE st."Date" =  date(now() AT TIME ZONE \'UTC\' AT TIME ZONE \'AST\') and  t."TemplateId" = $1',
         [currentTemplate.Id]
       );
       const tasks = tasksResult.rows;

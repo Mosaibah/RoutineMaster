@@ -49,22 +49,26 @@ const ClickablePieChart = () => {
   }, [historyId]);
 
   useEffect(() => {
-    if (timerRunning && timeLeft > 0) {
-      const startTime = Date.now();
-      const initialTimeLeft = timeLeft;
-      timerRef.current = setInterval(() => {
-        const currentTime = Date.now();
-        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
-        setTimeLeft(initialTimeLeft - elapsedTime);
-      }, 1000);
-    } else {
-      clearInterval(timerRef.current);
-      if (timeLeft === 0) {
-        updateCountdown(0);
+    const tick = () => {
+      if (timerRunning && timeLeft > 0) {
+        setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
+      } else {
+        if (timeLeft === 0) {
+          updateCountdown(0);
+        }
+        return;
       }
+
+      timerRef.current = setTimeout(tick, 1000);
+    };
+
+    if (timerRunning) {
+      tick();
+    } else {
+      clearTimeout(timerRef.current);
     }
 
-    return () => clearInterval(timerRef.current);
+    return () => clearTimeout(timerRef.current);
   }, [timerRunning, timeLeft]);
 
   const updateCountdown = async (remainingTime) => {

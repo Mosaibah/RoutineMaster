@@ -35,7 +35,7 @@ const ClickablePieChart = () => {
         }
 
         const data = await response.json();
-        data.Remaining = data.Remaining * 60
+        data.Remaining = data.Remaining * 60;
         setTask(data);
         setTimeLeft(data.Remaining);
         setLoading(false);
@@ -50,9 +50,12 @@ const ClickablePieChart = () => {
 
   useEffect(() => {
     if (timerRunning && timeLeft > 0) {
+      const startTime = Date.now();
+      const initialTimeLeft = timeLeft;
       timerRef.current = setInterval(() => {
-        setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
-        setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
+        const currentTime = Date.now();
+        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+        setTimeLeft(initialTimeLeft - elapsedTime);
       }, 1000);
     } else {
       clearInterval(timerRef.current);
@@ -91,10 +94,9 @@ const ClickablePieChart = () => {
           body: JSON.stringify(update),
         }
       );
-      console.log("response", response)
+      console.log("response", response);
 
       if (!response.ok) {
-
         throw new Error(`HTTP error: ${response.status}`);
       }
     } catch (error) {

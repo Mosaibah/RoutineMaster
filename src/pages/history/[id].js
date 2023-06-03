@@ -14,6 +14,7 @@ const ClickablePieChart = () => {
   const timerRef = useRef(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [worker, setWorker] = useState(null);
 
   useEffect(() => {
     async function fetchTask() {
@@ -39,7 +40,7 @@ const ClickablePieChart = () => {
         setTask(data);
         setTimeLeft(data.Remaining);
         setLoading(false);
-        setElapsedTime(task.Remaining - timeLeft);
+        setElapsedTime(data.Remaining - data.Remaining);
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
@@ -47,29 +48,47 @@ const ClickablePieChart = () => {
 
     fetchTask();
   }, [historyId]);
-
   useEffect(() => {
-    const tick = () => {
-      if (timerRunning && timeLeft > 0) {
-        setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
-      } else {
-        if (timeLeft === 0) {
-          updateCountdown(0);
-        }
-        return;
-      }
-
-      timerRef.current = setTimeout(tick, 1000);
-    };
-
     if (timerRunning) {
-      tick();
+      if (!worker) {
+        const timerWorker = new Worker("/timerWorker.js");
+        setWorker(timerWorker);
+      }
     } else {
-      clearTimeout(timerRef.current);
+      if (worker) {
+        worker.terminate();
+        setWorker(null);
+      }
     }
 
-    return () => clearTimeout(timerRef.current);
-  }, [timerRunning, timeLeft]);
+    return () => {
+      if (worker) {
+        worker.terminate();
+      }
+    };
+  }, [timerRunning]);
+
+  useEffect(() => {
+    if (worker) {
+      const handleMessage = () => {
+        if (timerRunning && timeLeft > 0) {
+          setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
+        }
+      };
+
+      worker.addEventListener("message", handleMessage);
+
+      return () => {
+        worker.removeEventListener("message", handleMessage);
+      };
+    }
+  }, [worker, timerRunning, timeLeft]);
+
+  useEffect(() => {
+    if (worker) {
+      worker.postMessage({ timerRunning });
+    }
+  }, [worker, timerRunning]);
 
   const updateCountdown = async (remainingTime) => {
     if (!timerStarted) {

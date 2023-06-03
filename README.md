@@ -5,6 +5,8 @@ RoutineMaster also features a countdown timer for each task, which ensures that 
 
 With RoutineMaster, users can easily plan and manage their daily routines and tasks, ensuring that they stay on track and achieve their goals. The application serves as a personal assistant, helping users master their routines and tasks, and enabling them to focus on what is important.
 
+### [ Live link](https://master.d1676fk00ghtj7.amplifyapp.com/)
+
 ### Functional Requirements
 
 1. Users should be able to create a new account.
